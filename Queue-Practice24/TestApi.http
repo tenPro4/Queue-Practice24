@@ -1,0 +1,25 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+### Create a new task with high priority
+POST https://localhost:7266/task
+Content-Type: application/json
+
+{
+  "Name": "Hight Priority Task",
+  "Priority": 1
+}
+
+### Create a new video
+POST https://localhost:7266/video
+Content-Type: application/json
+
+{
+  "FileName": "video.mp4"
+}
+
+### Get video by id
+GET https://localhost:7266/video/1
+Content-Type: application/json
+
+### Get videos
+GET https://localhost:7266/video
+Content-Type: application/json
