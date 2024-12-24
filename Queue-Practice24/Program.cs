@@ -32,6 +32,15 @@ var scope = app.Services.CreateScope();
 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 var channel = app.Services.GetService<Channel<TriggerEmail>>();
 
+for (int i = 0; i < 6; i++)
+{
+    var video = new VideoUpload
+    {
+        FileName = $"video_{i}.mp4",
+    };
+    concurrentTaskService.EnqueueTask(video);
+}
+
 for (int i = 0; i < 5; i++)
 {
     var email = new TriggerEmail
@@ -56,31 +65,15 @@ app.MapPost("/task", ([FromBody]TaskItem item) =>
     return Results.Ok(task);
 });
 
-app.MapPost("/video", async ([FromBody] VideoUpload item) =>
+app.MapGet("/video", async () =>
 {
-    var video = new VideoUpload
+    var videos = await dbContext.VideoUploads.Select(x => new
     {
-        FileName = item.FileName,
-    };
+        FileName = x.FileName,
+        CompletedAt = x.CompletedAt.ToString("T"),
+    }).ToListAsync();
 
-    dbContext.Add(video);
-    await dbContext.SaveChangesAsync();
-
-    concurrentTaskService.EnqueueTask(video);
-
-    return Results.Ok(video);
-});
-
-app.MapGet("/video/{id:int}", async (int id) =>
-{
-    var video = await dbContext.VideoUploads.FindAsync(id);
-
-    if (video == null)
-    {
-        return Results.NotFound(new { Message = "Video not found" });
-    }
-
-    return Results.Ok(video);
+    return Results.Ok(videos);
 });
 
 app.Run();

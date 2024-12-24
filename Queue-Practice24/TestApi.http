@@ -8,18 +8,6 @@ Content-Type: application/json
   "Priority": 1
 }
 
-### Create a new video
-POST https://localhost:7266/video
-Content-Type: application/json
-
-{
-  "FileName": "video.mp4"
-}
-
-### Get video by id
-GET https://localhost:7266/video/1
-Content-Type: application/json
-
 ### Get videos
 GET https://localhost:7266/video
 Content-Type: application/json
